@@ -51,10 +51,8 @@ export default function PersonasPage() {
         </div>
 
         {/* Subtitle block */}
-        <h2 className="font-display text-[1.35rem] font-semibold text-foreground/90 mb-2">
-          Meet Your Mentor ✨
-        </h2>
-        <p className="text-sm font-semibold gradient-text tracking-wide">
+        
+        <p className="pt-3 text-sm font-semibold gradient-text tracking-wide">
           AI trained on their personality
         </p>
         <p className="text-xs text-[var(--muted)] mt-1.5 tracking-wide font-medium">
