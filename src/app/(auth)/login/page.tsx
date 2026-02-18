@@ -71,7 +71,7 @@ export default function LoginPage() {
               <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-primary-500/20">
                 <span className="text-white font-bold">M</span>
               </div>
-              <span className="font-bold text-lg">MimChat</span>
+              <span className="font-bold text-lg">Mentra</span>
             </Link>
             <h1 className="text-2xl font-bold mb-2">Welcome Back</h1>
             <p className="text-sm text-[var(--muted)]">

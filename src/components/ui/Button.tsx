@@ -31,8 +31,8 @@ export function Button({
             variant === "primary",
           "bg-[var(--card)] text-foreground border border-[var(--border)] hover:bg-[var(--card-hover)]":
             variant === "secondary",
-          "text-foreground hover:bg-white/5": variant === "ghost",
-          "border border-[var(--border)] text-foreground hover:bg-white/5":
+          "text-foreground hover:bg-black/5": variant === "ghost",
+          "border border-[var(--border)] text-foreground hover:bg-black/5":
             variant === "outline",
         },
         {

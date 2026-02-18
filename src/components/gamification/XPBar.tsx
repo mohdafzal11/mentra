@@ -38,7 +38,7 @@ export function XPBar({
         </span>
       </div>
 
-      <div className="relative h-2 bg-[var(--border)] rounded-full overflow-hidden">
+      <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
         <motion.div
           className="absolute inset-y-0 left-0 rounded-full gradient-primary"
           initial={{ width: 0 }}

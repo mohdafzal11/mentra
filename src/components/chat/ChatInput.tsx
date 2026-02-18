@@ -40,8 +40,18 @@ export function ChatInput({
     }
   };
 
+  const canSend = message.trim() && !disabled;
+
   return (
-    <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-2 transition-colors focus-within:border-primary-500/30">
+    <div
+      className={cn(
+        "bg-white border rounded-2xl p-2 transition-all duration-300",
+        "shadow-[0_2px_12px_rgba(124,58,237,0.04)]",
+        "focus-within:shadow-[0_4px_20px_rgba(124,58,237,0.10)]",
+        "focus-within:border-purple-300",
+        "border-[var(--border)]"
+      )}
+    >
       <div className="flex items-end gap-2">
         <textarea
           ref={textareaRef}
@@ -51,18 +61,18 @@ export function ChatInput({
           placeholder={placeholder}
           disabled={disabled}
           rows={1}
-          className="flex-1 bg-transparent border-none outline-none resize-none text-sm text-foreground placeholder:text-[var(--muted)]/50 px-3 py-2 max-h-[120px]"
+          className="flex-1 bg-transparent border-none outline-none resize-none text-sm text-foreground placeholder:text-[var(--muted)]/60 px-3 py-2 max-h-[120px]"
         />
         <motion.button
           whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileTap={{ scale: 0.92 }}
           onClick={handleSubmit}
-          disabled={!message.trim() || disabled}
+          disabled={!canSend}
           className={cn(
-            "flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200",
-            message.trim() && !disabled
-              ? "gradient-primary text-white shadow-lg shadow-primary-500/25"
-              : "bg-[var(--border)] text-[var(--muted)]"
+            "flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300",
+            canSend
+              ? "gradient-primary text-white shadow-md shadow-purple-500/25 hover:shadow-lg hover:shadow-purple-500/30"
+              : "bg-purple-50 text-purple-300 border border-purple-100"
           )}
         >
           <Send className="w-4 h-4" />

@@ -1,146 +1,89 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { PersonaCard } from "@/components/persona/PersonaCard";
-import { useUser } from "@/lib/user-context";
 import { PERSONA_SEEDS } from "@/lib/personas";
-
-// Build emoji lookup from seed data
-const personaEmojis: Record<string, string> = Object.fromEntries(
-  PERSONA_SEEDS.map((p) => [p.name, p.avatarEmoji])
-);
-
-interface Persona {
-  id: string;
-  name: string;
-  inspirationSource: string;
-  tone: string;
-  unlockLevel: number;
-  category: string;
-  teaserLine: string;
-  isUnlocked: boolean;
-  depths: { depthLevel: number; description: string; unlockLevel: number }[];
-}
+import { chatStore } from "@/lib/chat-store";
 
 export default function PersonasPage() {
-  const { user } = useUser();
   const router = useRouter();
-  const [personas, setPersonas] = useState<Persona[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchPersonas();
-  }, []);
-
-  const fetchPersonas = async () => {
-    try {
-      const res = await fetch("/api/personas");
-      if (res.ok) {
-        const data = await res.json();
-        setPersonas(data.personas);
-      }
-    } catch (error) {
-      console.error("Fetch personas error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const startChat = async (personaId: string) => {
-    try {
-      const res = await fetch("/api/chat", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ personaId }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        router.push(`/chat/${data.chat.id}`);
-      }
-    } catch (error) {
-      console.error("Start chat error:", error);
-    }
+  const startChat = (personaName: string) => {
+    const chatId = chatStore.createChat(personaName);
+    router.push(`/chat/${chatId}`);
   };
 
   return (
-    <div className="max-w-3xl lg:max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
-      <div className="mb-6">
-        <h1 className="text-xl font-bold">Mentors</h1>
-        <p className="text-sm text-[var(--muted)]">
-          Unlock new mentors as you level up. Currently Level {user?.level || 1}
+    <div className="max-w-2xl mx-auto px-4 py-6">
+      {/* Premium header */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative mb-10 text-center py-4"
+      >
+        {/* Logo + Title row */}
+        <div className="flex items-center justify-center gap-4">
+          <motion.div
+            className="relative"
+            animate={{ rotate: [0, -3, 3, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="absolute inset-0 bg-purple-400/30 rounded-3xl blur-3xl scale-150" />
+            <img
+              src="/logo.png"
+              alt="Mentra"
+              className="relative w-12 h-12 object-contain drop-shadow-xl"
+            />
+          </motion.div>
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-display text-5xl font-extrabold tracking-tight leading-none gradient-text-animated">
+              Mentra
+            </h1>
+            <span className="text-[10px] bg-purple-600 text-white px-2.5 py-1 rounded-full font-bold uppercase tracking-widest shadow-sm">
+              Beta
+            </span>
+          </div>
+        </div>
+
+        {/* Subtitle block */}
+        <h2 className="font-display text-[1.35rem] font-semibold text-foreground/90 mb-2">
+          Meet Your Mentor ✨
+        </h2>
+        <p className="text-sm font-semibold gradient-text tracking-wide">
+          AI trained on their personality
         </p>
+        <p className="text-xs text-[var(--muted)] mt-1.5 tracking-wide font-medium">
+          remembers you &amp; grows closer
+        </p>
+      </motion.div>
+
+      {/* Persona list */}
+      <div className="space-y-3">
+        {PERSONA_SEEDS.map((persona, i) => (
+          <motion.div
+            key={persona.name}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.04, duration: 0.3 }}
+          >
+            <PersonaCard
+              name={persona.name}
+              teaserLine={persona.teaserLine}
+              avatarEmoji={persona.avatarEmoji}
+              avatarUrl={persona.avatarUrl}
+              category={persona.category}
+              unlockLevel={1}
+              userLevel={1}
+              isUnlocked={true}
+              onClick={() => startChat(persona.name)}
+            />
+          </motion.div>
+        ))}
       </div>
 
-      {loading ? (
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="h-28 rounded-2xl bg-[var(--card)] animate-pulse"
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-          {personas.map((persona, i) => (
-            <motion.div
-              key={persona.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-            >
-              <PersonaCard
-                name={persona.name}
-                teaserLine={persona.teaserLine}
-                avatarEmoji={personaEmojis[persona.name] || "🤖"}
-                category={persona.category}
-                unlockLevel={persona.unlockLevel}
-                userLevel={user?.level || 1}
-                isUnlocked={persona.isUnlocked}
-                onClick={() => startChat(persona.id)}
-              />
-
-              {/* Depth levels */}
-              {persona.isUnlocked && persona.depths.length > 0 && (
-                <div className="ml-12 mt-2 mb-3 space-y-1">
-                  {persona.depths.map((depth) => {
-                    const unlocked =
-                      depth.unlockLevel <= (user?.level || 1);
-                    return (
-                      <div
-                        key={depth.depthLevel}
-                        className={`flex items-center gap-2 text-xs ${
-                          unlocked
-                            ? "text-primary-400"
-                            : "text-[var(--muted)]/50"
-                        }`}
-                      >
-                        <div
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            unlocked
-                              ? "gradient-primary"
-                              : "bg-[var(--border)]"
-                          }`}
-                        />
-                        <span>{depth.description}</span>
-                        {!unlocked && (
-                          <span className="text-[var(--muted)]/30">
-                            (Lvl {depth.unlockLevel})
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </div>
-      )}
-
-      <p className="text-xs text-[var(--muted)]/60 text-center mt-8">
+      <p className="text-xs text-[var(--muted)] text-center mt-10">
         All personas are AI-generated characters inspired by public
         philosophies. No real-person impersonation.
       </p>

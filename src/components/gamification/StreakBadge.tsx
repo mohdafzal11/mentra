@@ -16,17 +16,17 @@ export function StreakBadge({ streak, compact = false }: StreakBadgeProps) {
     <motion.div
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${
         isOnFire
-          ? "bg-orange-500/20 border border-orange-500/30"
+          ? "bg-orange-50 border border-orange-200"
           : isHot
-            ? "bg-amber-500/20 border border-amber-500/30"
-            : "bg-[var(--card)] border border-[var(--border)]"
+            ? "bg-amber-50 border border-amber-200"
+            : "bg-white border border-[var(--border)]"
       }`}
       animate={
         isHot
           ? {
               boxShadow: [
                 "0 0 0px rgba(251, 146, 60, 0)",
-                "0 0 12px rgba(251, 146, 60, 0.3)",
+                "0 0 12px rgba(251, 146, 60, 0.2)",
                 "0 0 0px rgba(251, 146, 60, 0)",
               ],
             }
@@ -37,18 +37,18 @@ export function StreakBadge({ streak, compact = false }: StreakBadgeProps) {
       <Flame
         className={`w-4 h-4 ${
           isOnFire
-            ? "text-orange-400"
+            ? "text-orange-500"
             : isHot
-              ? "text-amber-400"
+              ? "text-amber-500"
               : "text-[var(--muted)]"
         }`}
       />
       <span
         className={`text-sm font-semibold ${
           isOnFire
-            ? "text-orange-300"
+            ? "text-orange-600"
             : isHot
-              ? "text-amber-300"
+              ? "text-amber-600"
               : "text-foreground"
         }`}
       >

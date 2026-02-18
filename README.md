@@ -1,4 +1,4 @@
-# MimChat — Grow Through Conversations
+# Mentra — Grow Through Conversations
 
 A production-ready, gamified conversational web app where users chat with AI-inspired personas based on Indian philosophies. This is a progression-driven, habit-forming experience designed to feel like mentorship, not just messaging.
 
@@ -53,7 +53,7 @@ Sessions are stored in the database with expiry timestamps. The JWT in the cooki
 
 ## UX Psychology & Gamification Design
 
-### Core Loop: The MimChat Habit Engine
+### Core Loop: The Mentra Habit Engine
 
 ```
 Trigger (notification/streak) -> Action (chat) -> Variable Reward (XP + insight)

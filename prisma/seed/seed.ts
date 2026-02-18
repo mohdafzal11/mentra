@@ -23,7 +23,7 @@ async function main() {
         unlockLevel: persona.unlockLevel,
         category: persona.category,
         teaserLine: persona.teaserLine,
-        avatarUrl: null,
+        avatarUrl: persona.avatarUrl || null,
         depths: {
           create: persona.depths.map((depth) => ({
             depthLevel: depth.depthLevel,
@@ -41,6 +41,7 @@ async function main() {
         unlockLevel: persona.unlockLevel,
         category: persona.category,
         teaserLine: persona.teaserLine,
+        avatarUrl: persona.avatarUrl || null,
       },
     });
     console.log(`  ✅ ${created.name} (Level ${created.unlockLevel})`);

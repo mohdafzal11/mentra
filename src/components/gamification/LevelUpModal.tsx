@@ -15,13 +15,13 @@ export function LevelUpModal({ isOpen, newLevel, onClose }: LevelUpModalProps) {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="relative w-[90%] max-w-sm p-8 rounded-3xl glass-strong text-center"
+            className="relative w-[90%] max-w-sm p-8 rounded-3xl bg-white shadow-2xl text-center"
             initial={{ scale: 0.5, opacity: 0, y: 50 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.5, opacity: 0 }}
@@ -68,9 +68,9 @@ export function LevelUpModal({ isOpen, newLevel, onClose }: LevelUpModalProps) {
               className="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-2xl gradient-primary shadow-lg shadow-primary-500/30"
               animate={{
                 boxShadow: [
-                  "0 10px 25px rgba(217, 70, 239, 0.3)",
-                  "0 10px 40px rgba(217, 70, 239, 0.5)",
-                  "0 10px 25px rgba(217, 70, 239, 0.3)",
+                  "0 10px 25px rgba(124, 58, 237, 0.3)",
+                  "0 10px 40px rgba(124, 58, 237, 0.5)",
+                  "0 10px 25px rgba(124, 58, 237, 0.3)",
                 ],
               }}
               transition={{ duration: 2, repeat: Infinity }}

@@ -1,13 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Lock, Sparkles } from "lucide-react";
+import { Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PersonaCardProps {
   name: string;
   teaserLine: string;
   avatarEmoji: string;
+  avatarUrl?: string | null;
   category: string;
   unlockLevel: number;
   userLevel: number;
@@ -16,92 +17,118 @@ interface PersonaCardProps {
   selected?: boolean;
 }
 
-const categoryColors: Record<string, string> = {
-  motivation: "from-rose-500/20 to-pink-500/20",
-  humor: "from-amber-500/20 to-yellow-500/20",
-  confidence: "from-fuchsia-500/20 to-pink-500/20",
-  wisdom: "from-indigo-500/20 to-blue-500/20",
-  empowerment: "from-purple-500/20 to-violet-500/20",
-  "life-lessons": "from-green-500/20 to-emerald-500/20",
-  // Legacy categories
-  leadership: "from-blue-500/20 to-indigo-500/20",
-  peace: "from-green-500/20 to-emerald-500/20",
-  science: "from-cyan-500/20 to-teal-500/20",
-  creativity: "from-purple-500/20 to-pink-500/20",
-};
-
-const categoryBorders: Record<string, string> = {
-  motivation: "border-rose-500/30",
-  humor: "border-amber-500/30",
-  confidence: "border-fuchsia-500/30",
-  wisdom: "border-indigo-500/30",
-  empowerment: "border-purple-500/30",
-  "life-lessons": "border-green-500/30",
-  // Legacy categories
-  leadership: "border-blue-500/30",
-  peace: "border-green-500/30",
-  science: "border-cyan-500/30",
-  creativity: "border-purple-500/30",
+const categoryPillColors: Record<string, string> = {
+  bollywood: "bg-rose-100 text-rose-700 border-rose-200",
+  hollywood: "bg-sky-100 text-sky-700 border-sky-200",
+  cricket: "bg-green-100 text-green-700 border-green-200",
+  football: "bg-emerald-100 text-emerald-700 border-emerald-200",
 };
 
 export function PersonaCard({
   name,
   teaserLine,
   avatarEmoji,
+  avatarUrl,
   category,
   unlockLevel,
-  userLevel,
   isUnlocked,
   onClick,
   selected = false,
 }: PersonaCardProps) {
   return (
     <motion.div
-      whileHover={{ scale: isUnlocked ? 1.03 : 1.01 }}
-      whileTap={{ scale: isUnlocked ? 0.97 : 1 }}
+      whileHover={isUnlocked ? { scale: 1.02, y: -3 } : {}}
+      whileTap={isUnlocked ? { scale: 0.98 } : {}}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
       className={cn(
-        "relative rounded-2xl border p-5 transition-all duration-300 cursor-pointer overflow-hidden",
-        isUnlocked
-          ? `bg-gradient-to-br ${categoryColors[category] || categoryColors.wisdom} ${categoryBorders[category] || categoryBorders.wisdom}`
-          : "bg-[var(--card)] border-[var(--border)] opacity-70",
+        "group relative rounded-2xl cursor-pointer overflow-hidden flex items-stretch h-[100px] md:h-[110px]",
+        "bg-gradient-to-br from-white via-white to-purple-50/40",
+        "border border-[var(--border)]",
+        "shadow-[0_2px_12px_rgba(124,58,237,0.06)]",
+        "hover:shadow-[0_8px_30px_rgba(124,58,237,0.14)]",
+        "hover:border-purple-200/80",
+        "transition-all duration-500 ease-out",
+        !isUnlocked && "opacity-50",
         selected && "ring-2 ring-primary-500 border-primary-500/50"
       )}
       onClick={isUnlocked ? onClick : undefined}
     >
+      {/* Animated gradient shimmer on hover */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-100/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+      </div>
+
+      {/* Subtle glow behind card on hover */}
+      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-400/0 via-purple-400/8 to-violet-400/0 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 pointer-events-none" />
+
+      {/* Lock overlay */}
       {!isUnlocked && (
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] z-10 flex items-center justify-center">
-          <div className="text-center">
-            <Lock className="w-5 h-5 text-[var(--muted)] mx-auto mb-1" />
-            <span className="text-xs text-[var(--muted)]">
-              Level {unlockLevel}
-            </span>
-          </div>
+        <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-1.5">
+          <Lock className="w-5 h-5 text-[var(--muted)]" />
+          <span className="text-xs font-medium text-[var(--muted)]">
+            Unlock at Level {unlockLevel}
+          </span>
         </div>
       )}
 
-      <div className="flex items-start gap-3">
-        <div className="text-3xl">{avatarEmoji}</div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h3 className="font-semibold text-foreground truncate">{name}</h3>
-            {isUnlocked && userLevel >= 15 && (
-              <Sparkles className="w-3.5 h-3.5 text-xp-gold flex-shrink-0" />
-            )}
+      {/* Avatar — flush left, full height, no cropping of face */}
+      <div className="relative flex-shrink-0 w-[100px] md:w-[110px]">
+        <div className="absolute -inset-1 bg-gradient-to-br from-purple-400/15 to-violet-400/15 opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-500" />
+        {avatarUrl ? (
+          <div className="relative w-full h-full overflow-hidden">
+            <img
+              src={avatarUrl}
+              alt={name}
+              className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+            />
+            {/* Soft fade on right edge */}
+            <div className="absolute inset-y-0 right-0 w-4 bg-gradient-to-l from-white to-transparent" />
           </div>
-          <p className="text-xs text-[var(--muted)] mt-0.5 capitalize">
-            {category}
-          </p>
-          <p className="text-sm text-[var(--muted)] mt-2 line-clamp-2 italic">
-            &ldquo;{teaserLine}&rdquo;
-          </p>
-        </div>
+        ) : (
+          <div className="relative w-full h-full bg-gradient-to-br from-purple-50 to-violet-100 flex items-center justify-center text-4xl">
+            {avatarEmoji}
+          </div>
+        )}
       </div>
 
-      {selected && (
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-0.5 gradient-primary"
-          layoutId="persona-selected"
-        />
+      {/* Content */}
+      <div className="relative flex-1 min-w-0 z-[1] p-4 flex flex-col justify-center">
+        {/* Name + category pill */}
+        <div className="flex items-center gap-2 mb-1.5">
+          <h3 className="font-display font-bold text-lg text-foreground truncate group-hover:text-purple-900 transition-colors duration-300">
+            {name}
+          </h3>
+          <span
+            className={cn(
+              "text-[10px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full flex-shrink-0 border",
+              categoryPillColors[category] || "bg-purple-100 text-purple-700 border-purple-200"
+            )}
+          >
+            {category}
+          </span>
+        </div>
+
+        {/* Teaser line */}
+        <p className="text-[13px] text-[var(--muted)] line-clamp-2 leading-relaxed group-hover:text-gray-600 transition-colors duration-300">
+          {teaserLine}
+        </p>
+      </div>
+
+      {/* Arrow */}
+      {isUnlocked && (
+        <div className="relative flex-shrink-0 z-[1] flex items-center pr-4">
+          <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center group-hover:bg-purple-100 transition-colors duration-300">
+            <svg
+              className="w-4 h-4 text-purple-400 group-hover:text-purple-600 transition-all duration-300 group-hover:translate-x-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </div>
       )}
     </motion.div>
   );
