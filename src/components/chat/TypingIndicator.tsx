@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 interface TypingIndicatorProps {
@@ -17,7 +18,7 @@ export function TypingIndicator({ personaEmoji, personaAvatarUrl }: TypingIndica
     >
       <div className="flex-shrink-0 w-8 h-8 rounded-xl overflow-hidden border border-purple-200/60 shadow-sm shadow-purple-100/40 flex items-center justify-center mt-1">
         {personaAvatarUrl ? (
-          <img src={personaAvatarUrl} alt="" className="w-full h-full object-cover object-top" />
+          <Image src={personaAvatarUrl} alt="" width={32} height={32} className="w-full h-full object-cover object-top" />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-purple-50 to-violet-100 flex items-center justify-center text-base">
             {personaEmoji || "🤖"}

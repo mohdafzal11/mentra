@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { ArrowLeft, Info, Sparkles } from "lucide-react";
 import { ChatMessage } from "@/components/chat/ChatMessage";
 import { ChatInput } from "@/components/chat/ChatInput";
@@ -210,7 +211,7 @@ export default function ChatPage() {
           <div className="relative flex-shrink-0">
             <div className="w-10 h-10 rounded-xl overflow-hidden border-2 border-purple-200/60 shadow-sm shadow-purple-200/30">
               {avatarUrl ? (
-                <img src={avatarUrl} alt={personaName} className="w-full h-full object-cover object-top" />
+                <Image src={avatarUrl} alt={personaName} width={40} height={40} className="w-full h-full object-cover object-top" />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-purple-50 to-violet-100 flex items-center justify-center text-xl">
                   {emoji}

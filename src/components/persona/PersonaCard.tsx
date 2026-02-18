@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -77,9 +78,11 @@ export function PersonaCard({
         <div className="absolute -inset-1 bg-gradient-to-br from-purple-400/15 to-violet-400/15 opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-500" />
         {avatarUrl ? (
           <div className="relative w-full h-full overflow-hidden">
-            <img
+            <Image
               src={avatarUrl}
               alt={name}
+              width={130}
+              height={200}
               className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
             />
             {/* Soft fade on right edge */}

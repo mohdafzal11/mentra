@@ -10,46 +10,9 @@ A production-ready, gamified conversational web app where users chat with AI-ins
 | Language | TypeScript |
 | Styling | Tailwind CSS |
 | Animations | Framer Motion |
-| Database | Supabase (PostgreSQL) |
-| ORM | Prisma |
-| Auth | Cookie-based (HTTP-only, secure) |
+| Storage | Client-side (localStorage) |
 | LLM | OpenRouter (model-agnostic) |
 | Rendering | Server Components + Server Actions |
-
-## Authentication Architecture
-
-### Why Cookie-Based Auth?
-
-We chose HTTP-only secure cookies over JWT-in-localStorage for several critical reasons:
-
-1. **XSS Protection**: HTTP-only cookies cannot be accessed by JavaScript, eliminating the most common attack vector for token theft.
-
-2. **Server-Side Compatibility**: Cookies flow automatically with every request, making them work seamlessly with:
-   - Server Components (via `cookies()`)
-   - Server Actions
-   - Middleware (route protection)
-   - API Routes
-
-3. **Automatic Session Refresh**: Cookie expiry is managed server-side with a 30-day sliding window. No client-side refresh token logic needed.
-
-4. **SameSite Protection**: `SameSite=Lax` prevents CSRF attacks while allowing normal navigation.
-
-### Auth Flow
-
-```
-Register/Login -> Create Session (DB) -> Sign JWT (session ID only) -> Set HTTP-only Cookie
-                                                                          |
-Every Request -> Middleware reads cookie -> Verify JWT -> Load session -> Allow/Deny
-                                                                          |
-Protected Pages -> getSession() -> Return user data from session -> Render
-```
-
-### Session Model
-
-Sessions are stored in the database with expiry timestamps. The JWT in the cookie only contains the session ID — no user data. This means:
-- Sessions can be revoked server-side
-- User data is always fresh (not stale from a token)
-- Multiple sessions per user are supported
 
 ## UX Psychology & Gamification Design
 
@@ -102,23 +65,6 @@ Conversations are framed as "quests" instead of "chats" because:
 
 Showing locked personas creates anticipation. When users unlock a new persona through their own XP, they value it more (IKEA effect) and feel ownership (endowment effect).
 
-## Database Schema
-
-### Models
-
-| Model | Purpose |
-|-------|---------|
-| `User` | Core user with XP, level, streak tracking |
-| `Session` | Server-side sessions for cookie auth |
-| `Persona` | AI mentor characters with philosophy prompts |
-| `PersonaDepth` | Progressive prompt layers per persona |
-| `Chat` | Conversation threads |
-| `Message` | Individual messages with XP tracking |
-| `Quest` | Structured conversation goals |
-| `UserQuestProgress` | Per-user quest completion tracking |
-| `XPLog` | Audit trail of all XP awards |
-| `UserPersonaUnlock` | Which personas each user has unlocked |
-
 ## Sample Personas
 
 | Persona | Category | Unlock Level | Inspiration |
@@ -136,7 +82,6 @@ All personas include explicit disclaimers that they are AI-generated characters 
 ### Prerequisites
 
 - Node.js 18+
-- PostgreSQL (via Supabase or local)
 
 ### Setup
 
@@ -152,19 +97,11 @@ cp .env.example .env
 
 Required variables:
 ```
-DATABASE_URL="postgresql://..."
-SESSION_SECRET="64-char-random-hex"
 OPENROUTER_API_KEY="sk-or-..."
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
-3. **Set up database**
-```bash
-npm run db:push     # Push schema to database
-npm run db:seed     # Seed personas and quests
-```
-
-4. **Run development server**
+3. **Run development server**
 ```bash
 npm run dev
 ```
@@ -202,24 +139,17 @@ src/
     quest/            # Quest cards
     ui/               # Base UI components
   lib/
-    auth.ts           # Cookie-based auth system
+    chat-store.ts     # Client-side chat storage
     gamification.ts   # XP engine, streaks, levels
     openrouter.ts     # LLM integration with streaming
-    personas.ts       # Persona seed data
-    prisma.ts         # Prisma client singleton
-    quests.ts         # Quest seed data
+    personas.ts       # Persona data
+    quests.ts         # Quest data
     utils.ts          # Utility functions
-    validations.ts    # Zod schemas
-  middleware.ts       # Route protection
 ```
 
 ## Security & Ethics
 
 - **No impersonation**: All personas are clearly marked as AI-inspired, not real people
-- **HTTP-only cookies**: Prevents XSS token theft
-- **SameSite cookies**: Prevents CSRF attacks
-- **Input validation**: Zod schemas on all user inputs
-- **Rate limiting ready**: Architecture supports per-user rate limits
 - **Prompt injection protection**: System prompts include strict behavioral boundaries
 - **No political content**: Personas explicitly avoid political statements
 - **Cultural sensitivity**: Indian context without stereotyping

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { Plus, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -48,9 +49,11 @@ export default function ChatListPage() {
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
             <div className="absolute inset-0 bg-purple-400/30 rounded-3xl blur-3xl scale-150" />
-            <img
+            <Image
               src="/logo.png"
               alt="Mentra"
+              width={48}
+              height={48}
               className="relative w-12 h-12 object-contain drop-shadow-xl"
             />
           </motion.div>
