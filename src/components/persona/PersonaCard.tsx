@@ -42,7 +42,7 @@ export function PersonaCard({
       whileTap={isUnlocked ? { scale: 0.98 } : {}}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       className={cn(
-        "group relative rounded-2xl cursor-pointer overflow-hidden flex items-stretch h-[100px] md:h-[110px]",
+        "group relative rounded-2xl cursor-pointer overflow-hidden flex items-stretch h-[130px] md:h-[110px]",
         "bg-gradient-to-br from-white via-white to-purple-50/40",
         "border border-[var(--border)]",
         "shadow-[0_2px_12px_rgba(124,58,237,0.06)]",
@@ -73,7 +73,7 @@ export function PersonaCard({
       )}
 
       {/* Avatar — flush left, full height, no cropping of face */}
-      <div className="relative flex-shrink-0 w-[100px] md:w-[110px]">
+      <div className="relative flex-shrink-0 w-[130px] md:w-[110px]">
         <div className="absolute -inset-1 bg-gradient-to-br from-purple-400/15 to-violet-400/15 opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-500" />
         {avatarUrl ? (
           <div className="relative w-full h-full overflow-hidden">
