@@ -22,6 +22,7 @@ const categoryPillColors: Record<string, string> = {
   hollywood: "bg-sky-100 text-sky-700 border-sky-200",
   cricket: "bg-green-100 text-green-700 border-green-200",
   football: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  web3: "bg-amber-100 text-amber-700 border-amber-200",
 };
 
 export function PersonaCard({
